@@ -1,5 +1,6 @@
 const express=require("express")
 const Article=require("../models/article")
+const {verifyToken} =require("../middleware/verify-token")
 const router=express.Router()
 
 router.post("/",async(req,res)=>{
@@ -26,7 +27,7 @@ router.put("/:id",async(req,res)=>{
     }
 })
 
-router.get('/',async(req,res)=>{
+router.get('/',verifyToken, async(req,res)=>{
 
     try {
         const art= await Article.find({}, null, {sort: {'_id': -1}}).populate("scategorieID")
@@ -55,7 +56,7 @@ router.delete("/:id",async(req,res)=>{
     
 })
 
-router.get('/art/pagination', async(req, res) => {
+router.get('/art/pagination',verifyToken, async(req, res) => {
 
     const filtre = req.query.filtre || ""; 
     const page = parseInt(req.query.page);
